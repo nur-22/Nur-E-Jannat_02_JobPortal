@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Skill Matching{% endblock %}
+
+{% block content %}
+
+{% if matched_jobs is not None %}
+
+    <h1 class="text-primary mb-3">Jobs Matching Your Skills</h1>
+
+    <div class="alert alert-info">
+        <strong>Your Skills:</strong> {{ user_skills|join:", " }}
+    </div>
+
+    {% for item in matched_jobs %}
+
+        <div class="card shadow-sm border-0 mb-3">
+            <div class="card-body">
+
+                <h3 class="text-primary">{{ item.job.title }}</h3>
+
+                <p><strong>Category:</strong> {{ item.job.category }}</p>
+
+                <p><strong>Required Skills:</strong> {{ item.job.skills }}</p>
+
+                <p>
+                    <strong>Matching Skills:</strong>
+                    {{ item.matching_skills|join:", " }}
+                </p>
+
+                <a href="{% url 'apply_job' item.job.id %}"
+                   class="btn btn-success">
+                    Apply for this Job
+                </a>
+
+            </div>
+        </div>
+
+    {% empty %}
+
+        <div class="alert alert-warning">
+            No matching jobs found. Update your profile skills to find relevant jobs.
+        </div>
+
+    {% endfor %}
+
+{% else %}
+
+    <h1 class="text-primary mb-4">Your Posted Jobs</h1>
+
+    {% for job in recruiter_jobs %}
+
+        <div class="card shadow-sm border-0 mb-3">
+            <div class="card-body">
+
+                <h3 class="text-primary">{{ job.title }}</h3>
+
+                <p>
+                    <strong>Required Skills:</strong> {{ job.skills }}
+                </p>
+
+            </div>
+        </div>
+
+    {% empty %}
+
+        <div class="alert alert-warning">
+            You have not posted any jobs yet.
+        </div>
+
+    {% endfor %}
+
+{% endif %}
+
+<a href="{% url 'dashboard' %}" class="btn btn-secondary mt-3">
+    Back to Dashboard
+</a>
+
+{% endblock %}

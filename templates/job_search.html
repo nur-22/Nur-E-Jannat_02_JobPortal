@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Jobs{% endblock %}
+
+{% block content %}
+
+<h1 class="text-primary mb-4">Available Jobs</h1>
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+
+        <form method="GET" action="{% url 'job_search' %}">
+            <div class="input-group">
+                <input
+                    type="text"
+                    name="q"
+                    class="form-control"
+                    placeholder="Search by title, category, or skills"
+                    value="{{ query }}"
+                >
+
+                <button type="submit" class="btn btn-primary">
+                    Search
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+{% for job in jobs %}
+
+    <div class="card shadow-sm border-0 mb-3">
+        <div class="card-body">
+
+            <h3 class="text-primary">{{ job.title }}</h3>
+
+            <p><strong>Category:</strong> {{ job.category }}</p>
+            <p><strong>Openings:</strong> {{ job.number_of_openings }}</p>
+            <p><strong>Description:</strong> {{ job.description }}</p>
+            <p><strong>Required Skills:</strong> {{ job.skills }}</p>
+
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'apply_job' job.id %}" class="btn btn-success">
+                    Apply for this Job
+                </a>
+            {% endif %}
+
+        </div>
+    </div>
+
+{% empty %}
+
+    <div class="alert alert-warning">
+        No jobs found.
+    </div>
+
+{% endfor %}
+
+<a href="{% url 'dashboard' %}" class="btn btn-secondary mt-3">
+    Back to Dashboard
+</a>
+
+{% endblock %}
